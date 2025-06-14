@@ -1,0 +1,68 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #a0e7e5, #b4f8c8, #caf0f8);
+    border-radius: 10px;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #2f4f4f;
+    margin-bottom: 30px;
+  }
+  
+  .form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+  }
+  
+  .form-column {
+    flex: 1;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  input,
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .form-actions {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  button:hover {
+    background-color: #008c9e;
+  }
+  
+  .links {
+    margin-top: 20px;
+    text-align: center;
+  }
+  

@@ -1,0 +1,38 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    /* Light pastel gradient: turquoise → green → sky blue */
+    background: linear-gradient(135deg, #a0e7e5, #b4f8c8, #caf0f8);
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    color: #2f4f4f; /* dark slate gray for contrast */
+    margin-bottom: 30px;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .button-group button {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    color: white;
+    background-color: #00bcd4; /* turquoise button */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .button-group button:hover {
+    background-color: #008c9e; /* darker turquoise on hover */
+  }
+  

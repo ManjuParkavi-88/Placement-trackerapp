@@ -1,0 +1,18 @@
+<div class="container">
+    <h2>PLACEMENT TRACKER</h2>
+    <h2>Student Login</h2>
+    <form>
+        <label for="email">Email:</label>
+        <input id="email" name="email" type="email" [(ngModel)]="email" required />
+
+        <label for="password">Password:</label>
+        <input id="password" name="password" type="password" [(ngModel)]="password" required />
+
+        <button type="button" (click)="login()">Login</button>
+
+        <div class="links">
+            <a routerLink="/student-register">Register</a> |
+            <a routerLink="/forgot-password">Forgot Password?</a>
+        </div>
+    </form>
+</div>
