@@ -1,0 +1,43 @@
+<div class="tab-content">
+
+
+    <div class="scrollable-table">
+        <table class="job-table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Job ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Mode</th>
+                    <th>Venue</th>
+                    <th>Link</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let app of applications">
+                    <td>{{ app.studentId }}</td>
+                    <td>{{ app.jobId }}</td>
+                    <td><input type="date" [(ngModel)]="app.date" required /></td>
+                    <td><input type="time" [(ngModel)]="app.time" required /></td>
+                    <td>
+                        <select [(ngModel)]="app.mode" required>
+                            <option value="ONLINE">ONLINE</option>
+                            <option value="OFFLINE">OFFLINE</option>
+                        </select>
+                    </td>
+                    <td><input type="text" [(ngModel)]="app.venue" placeholder="Venue / Hall" required /></td>
+                    <td><input type="text" [(ngModel)]="app.link" placeholder="Meeting Link"
+                            [disabled]="app.mode === 'OFFLINE'" /></td>
+                    <td>
+                        <button class="action-button edit" (click)="schedule(app)" [disabled]="app.isScheduled">
+                            {{ app.isScheduled ? 'Scheduled' : 'Send' }}
+                        </button>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

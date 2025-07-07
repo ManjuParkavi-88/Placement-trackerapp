@@ -1,8 +1,11 @@
 <div class="container">
     <h2>Admin Registration</h2>
     <form>
-        <label for="name">Full Name:</label>
-        <input id="name" name="name" type="text" [(ngModel)]="name" required />
+        <label for="firstName">First Name:</label>
+        <input id="firstName" name="firstName" type="text" [(ngModel)]="firstName" required />
+
+        <label for="lastName">Last Name:</label>
+        <input id="lastName" name="lastName" type="text" [(ngModel)]="lastName" required />
 
         <label for="email">Email:</label>
         <input id="email" name="email" type="email" [(ngModel)]="email" required />
@@ -17,6 +20,9 @@
 
         <div class="links">
             <a routerLink="/admin-login">Back to Login</a>
+        </div>
+        <div class="back-link">
+            <a routerLink="/welcome">← Back to Welcome Page</a>
         </div>
     </form>
 </div>

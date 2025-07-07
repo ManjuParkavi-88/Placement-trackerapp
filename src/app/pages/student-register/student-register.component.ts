@@ -57,7 +57,7 @@ export class StudentRegisterComponent {
       rollNo: this.rollNo
     };
 
-    this.http.post('http://localhost:8080/students', studentData)
+    this.http.post('http://localhost:8080/api/student/register', studentData)
       .subscribe({
         next: (res) => {
           this.toastr.success('Registration successful!');

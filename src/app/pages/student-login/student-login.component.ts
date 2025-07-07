@@ -27,7 +27,7 @@ export class StudentLoginComponent {
       password: this.password
     };
 
-    this.http.post<any>('http://localhost:8080/students/login', student)
+    this.http.post<any>('http://localhost:8080/api/student/login', student)
       .subscribe({
         next: (response) => {
           console.log('Login successful:', response);

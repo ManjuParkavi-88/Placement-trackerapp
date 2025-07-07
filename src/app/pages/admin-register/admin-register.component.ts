@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { AdminAuthService } from '../../services/admin-auth.service';
 
 @Component({
   selector: 'app-admin-register',
   standalone: true,
-  imports: [FormsModule, RouterModule, CommonModule, ToastrModule],
+  imports: [FormsModule, RouterModule, CommonModule],
   templateUrl: './admin-register.component.html',
   styleUrls: ['./admin-register.component.css']
 })
 export class AdminRegisterComponent {
-  name = '';
-  email = '';
-  password = '';
-  confirmPassword = '';
+  firstName: string = '';
+  lastName: string = '';
+  email: string = '';
+  password: string = '';
+  confirmPassword: string = '';
 
   constructor(private router: Router, private toastr: ToastrService, private adminService: AdminAuthService) {}
 
@@ -25,8 +26,10 @@ export class AdminRegisterComponent {
       this.toastr.error('Passwords do not match!');
       return;
     }
+
     const adminData = {
-      name: this.name,
+      firstName: this.firstName, 
+      lastName:this.lastName,
       email: this.email,
       password: this.password
     };
@@ -38,6 +41,5 @@ export class AdminRegisterComponent {
       },
       error: () => this.toastr.error('Registration failed!')
     });
-        
   }
 }

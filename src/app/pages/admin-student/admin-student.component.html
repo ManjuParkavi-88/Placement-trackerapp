@@ -1,0 +1,32 @@
+<div class="scrollable-table">
+    <table class="job-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>DOB</th>
+                <th>Email</th>
+                <th>College</th>
+                <th>Department</th>
+                <th>Batch</th>
+                <th>City</th>
+                <th>Phone No</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let student of students">
+                <td>{{ student.id }}</td>
+                <td>{{ student.firstName }} {{ student.lastName }}</td>
+                <td>{{ student.dob }}</td> <!-- ✅ field name should match backend -->
+                <td>{{ student.email }}</td>
+                <td>{{ student.collegeName }}</td>
+                <td>{{ student.department }}</td>
+                <td>{{ student.batch }}</td>
+                <td>{{ student.city }}</td>
+                <td>{{ student.phoneNo }}</td> <!-- ✅ fix this: avoid dot inside property -->
+                <td>{{ student.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

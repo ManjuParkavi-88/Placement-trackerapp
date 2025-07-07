@@ -1,0 +1,44 @@
+<div class="scrollable-table">
+    <table class="job-table">
+        <thead>
+            <tr>
+                <th>Job ID</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Deadline</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let job of jobs">
+                <td>{{ job.jobId }}</td>
+                <td>{{ job.companyName }}</td>
+                <td>{{ job.jobRole }}</td>
+                <td>{{ job.applicationDeadline | date }}</td>
+                <td>
+                    <button (click)="editJob(job)" class="action-button edit">
+                        Edit
+                    </button>
+                    <button (click)="deleteJob(job.jobId)" class="action-button delete">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Edit form (conditionally shown) -->
+<div *ngIf="editingJob">
+    <h3>Edit Job</h3>
+    <form (ngSubmit)="saveEdit()">
+        <label>Company:</label>
+        <input [(ngModel)]="editingJob.companyName" name="companyName" required />
+        <label>Role:</label>
+        <input [(ngModel)]="editingJob.jobRole" name="jobRole" required />
+        <label>Deadline:</label>
+        <input type="date" [(ngModel)]="editingJob.applicationDeadline" name="deadline" required />
+        <button type="submit">Save</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+    </form>
+</div>

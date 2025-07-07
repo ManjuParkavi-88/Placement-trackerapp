@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
+
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
@@ -15,3 +17,5 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(), 
   ]
 }).catch((err) => console.error(err));
+
+

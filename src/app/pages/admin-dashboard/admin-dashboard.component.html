@@ -1,1 +1,75 @@
-<p>admin-dashboard works!</p>
+<!-- Header -->
+<div class="header">
+    <div class="left-header">
+        <img *ngIf="admin?.photoUrl; else defaultPic" [src]="admin.photoUrl" class="profile-img" alt="Profile" />
+        <ng-template #defaultPic>
+            <div class="profile-img default-icon">👤</div>
+        </ng-template>
+        <div class="welcome">Welcome, {{ admin?.firstName }}!</div>
+    </div>
+
+    <div class="right-header">
+        <input type="file" class="upload-btn" (change)="onFileSelected($event)" />
+        <button class="logout" (click)="logout()">Logout</button>
+    </div>
+</div>
+
+<!-- Sticky Horizontal Tabs -->
+<nav class="tabs-row sticky-tabs">
+    <button (click)="select('students')" [class.active]="selectedTab === 'students'">
+        View Students
+    </button>
+    <button (click)="select('postJob')" [class.active]="selectedTab === 'postJob'">
+        Post Jobs
+    </button>
+    <button (click)="select('viewJobs')" [class.active]="selectedTab === 'viewJobs'">
+        View Jobs
+    </button>
+    <button (click)="select('applications')" [class.active]="selectedTab === 'applications'">
+        Student Applications
+    </button>
+    <button (click)="select('schedule')" [class.active]="selectedTab === 'schedule'">
+        Interview Schedules
+    </button>
+    <button (click)="select('feedbacks')" [class.active]="selectedTab === 'feedbacks'">
+        View Feedbacks
+    </button>
+</nav>
+
+<!-- Tab Content -->
+<div class="tab-content">
+    <!-- 1: View Students -->
+    <section *ngIf="selectedTab === 'students'">
+        <h2>Students List</h2>
+        <app-admin-student></app-admin-student>
+    </section>
+
+    <!-- 2: Post Jobs -->
+    <section *ngIf="selectedTab === 'postJob'">
+        <app-admin-job-post></app-admin-job-post>
+    </section>
+
+    <!-- 3: View Jobs -->
+    <section *ngIf="selectedTab === 'viewJobs'">
+        <h2>View Jobs</h2>
+        <app-admin-job-list></app-admin-job-list>
+    </section>
+
+    <!-- 4: Student Applications -->
+    <section *ngIf="selectedTab === 'applications'">
+        <h2>Student Applications</h2>
+        <app-admin-application-review></app-admin-application-review>
+    </section>
+
+    <!-- 5: Interview Schedules -->
+    <section *ngIf="selectedTab === 'schedule'">
+        <h2>Interview Schedules</h2>
+        <app-admin-interview-schedule></app-admin-interview-schedule>
+    </section>
+
+    <!-- 6: View Feedbacks -->
+    <section *ngIf="selectedTab === 'feedbacks'">
+        <h2>View Feedbacks</h2>
+        <app-admin-feedback-list></app-admin-feedback-list>
+    </section>
+</div>

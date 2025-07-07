@@ -1,0 +1,37 @@
+<div class="tab-content">
+
+
+    <div class="scrollable-table">
+        <table class="job-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student ID</th>
+                    <th>Job Role</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Interview</th>
+                    <th>Response</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let app of applications">
+                    <td>{{ app.applicationId }}</td>
+                    <td>{{ app.studentId }}</td> <!-- ✅ make sure this field is returned in DTO -->
+                    <td>{{ app.jobRole }}</td>
+                    <td>{{ app.companyName }}</td>
+                    <td>{{ app.status }}</td>
+                    <td>{{ app.interviewNotification ? '✅ Sent' : '❌ Not Sent' }}</td>
+                    <td>{{ app.response || '—' }}</td>
+                    <td>
+                        <button *ngIf="app.status !== 'Shortlisted'" class="action-button edit"
+                            (click)="shortlist(app.applicationId)">
+                            Shortlist
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

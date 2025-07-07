@@ -1,7 +1,7 @@
 <!-- Header -->
 <div class="header">
     <div class="left-header">
-        <img *ngIf="student?.photoUrl; else defaultPic" [src]="student.photoUrl" class="profile-img" alt="Profile">
+        <img *ngIf="student?.photoUrl; else defaultPic" [src]="student.photoUrl" class="profile-img" alt="Profile" />
         <ng-template #defaultPic>
             <div class="profile-img default-icon">👤</div>
         </ng-template>
@@ -9,45 +9,142 @@
     </div>
 
     <div class="right-header">
-        <input type="file" class="upload-btn" (change)="onFileSelected($event)">
+        <input type="file" class="upload-btn" (change)="onFileSelected($event)" />
         <button class="logout" (click)="logout()">Logout</button>
     </div>
 </div>
 
-<!-- Sticky Horizontal Tabs -->
+<!-- Sticky Tabs -->
 <div class="tabs-row sticky-tabs">
-    <button (click)="selectTab('profile')" [class.active]="selectedTab === 'profile'">My Profile</button>
-    <button (click)="selectTab('jobs')" [class.active]="selectedTab === 'jobs'">View Jobs</button>
-    <button (click)="selectTab('applications')" [class.active]="selectedTab === 'applications'">My Applications</button>
-    <button (click)="selectTab('interview')" [class.active]="selectedTab === 'interview'">Interview Info</button>
-    <button (click)="selectTab('feedback')" [class.active]="selectedTab === 'feedback'">Feedback</button>
+    <button *ngFor="let tab of ['profile', 'jobs', 'applications', 'interview', 'feedback']" (click)="selectTab(tab)"
+        [class.active]="selectedTab === tab">
+        {{ tab | titlecase }}
+    </button>
 </div>
 
 <!-- Tab Content -->
 <div class="tab-content">
+
+    <!-- Profile Tab -->
     <div *ngIf="selectedTab === 'profile'">
         <h2>My Profile</h2>
         <p><strong>Name:</strong> {{ student?.firstName }} {{ student?.lastName }}</p>
         <p><strong>Email:</strong> {{ student?.email }}</p>
         <p><strong>College:</strong> {{ student?.collegeName }}</p>
         <p><strong>DOB:</strong> {{ student?.dob }}</p>
-        <p><strong>RollNo:</strong> {{ student?.rollNo }}</p>
-        <p><strong>PhoneNo:</strong> {{ student?.phoneNo }}</p>
+        <p><strong>Roll No:</strong> {{ student?.rollNo }}</p>
+        <p><strong>Phone No:</strong> {{ student?.phoneNo }}</p>
         <p><strong>Batch:</strong> {{ student?.batch }}</p>
         <p><strong>City:</strong> {{ student?.city }}</p>
         <p><strong>Status:</strong> {{ student?.status }}</p>
     </div>
 
+    <!-- Jobs Tab -->
     <div *ngIf="selectedTab === 'jobs'">
         <h2>Available Jobs</h2>
+        <div class="scrollable-table">
+            <table class="job-table">
+                <thead>
+                    <tr>
+                        <th>Job ID</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Description</th>
+                        <th>Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let job of jobs">
+                        <td>{{ job.jobId }}</td>
+                        <td>{{ job.companyName }}</td>
+                        <td>{{ job.jobRole }}</td>
+                        <td>{{ job.jobDescription }}</td>
+                        <td>{{ job.applicationDeadline | date: 'mediumDate' }}</td>
+                        <td>
+                            <button class="apply-btn" [class.applied]="appliedJobs.has(job.jobId)"
+                                [disabled]="appliedJobs.has(job.jobId)" (click)="apply(job.jobId)">
+                                {{ appliedJobs.has(job.jobId) ? 'Applied' : 'Apply' }}
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <!-- Applications Tab -->
     <div *ngIf="selectedTab === 'applications'">
         <h2>My Applications</h2>
+        <div class="scrollable-table">
+            <table class="job-table">
+                <thead>
+                    <tr>
+                        <th>Job ID</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Interview?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let application of applications">
+                        <td>{{ application.jobId }}</td>
+                        <td>{{ application.companyName }}</td>
+                        <td>{{ application.jobRole }}</td>
+                        <td>{{ application.applicationDeadline | date }}</td>
+                        <td>{{ application.status }}</td>
+                        <td>
+                            <button *ngIf="application.status === 'Shortlisted' && !application.response"
+                                (click)="confirmInterview(application.applicationId)">
+                                Schedule Interview
+                            </button>
+                            <span *ngIf="application.response">{{ application.response }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <!-- Interview Tab -->
     <div *ngIf="selectedTab === 'interview'">
         <h2>Interview Info</h2>
+        <div class="scrollable-table">
+            <table class="job-table">
+                <thead>
+                    <tr>
+                        <th>Schedule ID</th>
+                        <th>Job ID</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Mode</th>
+                        <th>Venue</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let interview of interviewSchedules">
+                        <td>{{ interview.scheduleId }}</td>
+                        <td>{{ interview.jobId }}</td>
+                        <td>{{ interview.date }}</td>
+                        <td>{{ interview.time }}</td>
+                        <td>{{ interview.mode }}</td>
+                        <td>{{ interview.venue || '—' }}</td>
+                        <td>
+                            <a *ngIf="interview.link" [href]="interview.link" target="_blank">Join</a>
+                            <span *ngIf="!interview.link">—</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <!-- Feedback Tab -->
     <div *ngIf="selectedTab === 'feedback'">
         <h2>Feedback</h2>
     </div>
+
 </div>

@@ -1,0 +1,57 @@
+<div class="job-form-container">
+    <h2>Job Details</h2>
+    <form (ngSubmit)="saveJob()" #jobForm="ngForm">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="postedBy">Posted By (Admin ID):</label>
+                <input id="postedBy" name="postedBy" type="number" [(ngModel)]="job.postedBy" required />
+            </div>
+
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input id="title" name="title" type="text" [(ngModel)]="job.title" required />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="companyName">Company Name:</label>
+                <input id="companyName" name="companyName" type="text" [(ngModel)]="job.companyName" required />
+            </div>
+
+            <div class="form-group">
+                <label for="requiredSkills">Required Skills:</label>
+                <input id="requiredSkills" name="requiredSkills" type="text" [(ngModel)]="job.requiredSkills"
+                    required />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="qualifications">Qualifications:</label>
+                <input id="qualifications" name="qualifications" type="text" [(ngModel)]="job.qualifications"
+                    required />
+            </div>
+
+            <div class="form-group">
+                <label for="jobRole">Job Role:</label>
+                <input id="jobRole" name="jobRole" type="text" [(ngModel)]="job.jobRole" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="jobDescription">Job Description:</label>
+            <textarea id="jobDescription" name="jobDescription" rows="3" [(ngModel)]="job.jobDescription"
+                required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="applicationDeadline">Application Deadline:</label>
+            <input id="applicationDeadline" name="applicationDeadline" type="date" [(ngModel)]="job.applicationDeadline"
+                required />
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
