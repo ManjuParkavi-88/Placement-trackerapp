@@ -1,6 +1,4 @@
 <div class="tab-content">
-
-
     <div class="scrollable-table">
         <table class="job-table">
             <thead>
@@ -10,24 +8,33 @@
                     <th>Job Role</th>
                     <th>Company</th>
                     <th>Status</th>
-                    <th>Interview</th>
                     <th>Response</th>
-                    <th>Actions</th>
+                    <th>Interview Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let app of applications">
                     <td>{{ app.applicationId }}</td>
-                    <td>{{ app.studentId }}</td> <!-- ✅ make sure this field is returned in DTO -->
+                    <td>{{ app.studentId }}</td>
                     <td>{{ app.jobRole }}</td>
                     <td>{{ app.companyName }}</td>
                     <td>{{ app.status }}</td>
-                    <td>{{ app.interviewNotification ? '✅ Sent' : '❌ Not Sent' }}</td>
                     <td>{{ app.response || '—' }}</td>
                     <td>
-                        <button *ngIf="app.status !== 'Shortlisted'" class="action-button edit"
-                            (click)="shortlist(app.applicationId)">
+                        <!-- Interview Status Icon -->
+                        <span *ngIf="app.interviewNotification" style="color: green;">✅ Sent</span>
+                        <span *ngIf="!app.interviewNotification" style="color: red;">❌ Not Sent</span>
+
+                        <!-- Shortlist Button -->
+                        <button *ngIf="app.status !== 'Shortlisted'" (click)="shortlist(app.applicationId)"
+                            class="action-button edit">
                             Shortlist
+                        </button>
+
+                        <!-- Send Interview Notification -->
+                        <button *ngIf="!app.interviewNotification" (click)="notify(app.studentId)"
+                            class="action-button">
+                            Send
                         </button>
                     </td>
                 </tr>

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // ✅ Needed for *ngIf, *ngFor
+import { CommonModule } from '@angular/common';
 import { ApplicationsService } from '../../services/application.service';
 import { ApplicationDTO } from '../../models/application.model';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  standalone: true, // ✅ Required for standalone
+  standalone: true,
   selector: 'app-admin-application-review',
   templateUrl: './admin-application-review.component.html',
   styleUrls: ['./admin-application-review.component.css'],
-  imports: [CommonModule, ToastrModule] // ✅ Import CommonModule here
+  imports: [CommonModule]
 })
 export class AdminApplicationReviewComponent implements OnInit {
   applications: ApplicationDTO[] = [];
@@ -24,11 +24,17 @@ export class AdminApplicationReviewComponent implements OnInit {
   }
 
   loadApplications(): void {
-    this.applicationsService.getAdminApplications().subscribe({
-      next: (data) => this.applications = data,
-      error: () => this.toastr.error("Failed to load applications")
-    });
-  }
+  this.applicationsService.getAdminApplications().subscribe({
+    next: (data) => {
+      // Cleanly cast to boolean if needed
+      this.applications = data.map(app => ({
+        ...app,
+        interviewNotification: !!app.interviewNotification
+      }));
+    },
+    error: () => this.toastr.error("Failed to load applications")
+  });
+}
 
   shortlist(id: number): void {
     this.applicationsService.shortlistApplication(id).subscribe({
@@ -44,7 +50,12 @@ export class AdminApplicationReviewComponent implements OnInit {
     this.applicationsService.sendInterviewNotification(studentId).subscribe({
       next: () => {
         this.toastr.success("Notification sent");
-        this.loadApplications();
+
+        // ✅ Directly update the UI without reload
+        const app = this.applications.find(a => a.studentId === studentId);
+        if (app) {
+          app.interviewNotification = true;
+        }
       },
       error: () => this.toastr.error("Failed to send notification")
     });
