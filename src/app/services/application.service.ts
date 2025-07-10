@@ -57,4 +57,7 @@ sendInterviewNotification(studentId: number): Observable<any> {
 getInterviewSchedulesByStudentId(studentId: number): Observable<any[]> {
   return this.http.get<any[]>(`http://localhost:8080/api/admin/interview-schedules/student/${studentId}`);
 }
+postStudentFeedback(feedback: any): Observable<any> {
+  return this.http.post(`http://localhost:8080/api/student/feedbacks`, feedback);
+}
 }

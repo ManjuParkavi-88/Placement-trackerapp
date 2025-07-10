@@ -25,7 +25,7 @@
 <!-- Tab Content -->
 <div class="tab-content">
 
-    <!-- Profile Tab -->
+    <!-- Profile -->
     <div *ngIf="selectedTab === 'profile'">
         <h2>My Profile</h2>
         <p><strong>Name:</strong> {{ student?.firstName }} {{ student?.lastName }}</p>
@@ -39,7 +39,7 @@
         <p><strong>Status:</strong> {{ student?.status }}</p>
     </div>
 
-    <!-- Jobs Tab -->
+    <!-- Jobs -->
     <div *ngIf="selectedTab === 'jobs'">
         <h2>Available Jobs</h2>
         <div class="scrollable-table">
@@ -60,7 +60,7 @@
                         <td>{{ job.companyName }}</td>
                         <td>{{ job.jobRole }}</td>
                         <td>{{ job.jobDescription }}</td>
-                        <td>{{ job.applicationDeadline | date: 'mediumDate' }}</td>
+                        <td>{{ job.applicationDeadline | date }}</td>
                         <td>
                             <button class="apply-btn" [class.applied]="appliedJobs.has(job.jobId)"
                                 [disabled]="appliedJobs.has(job.jobId)" (click)="apply(job.jobId)">
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <!-- Applications Tab -->
+    <!-- Applications -->
     <div *ngIf="selectedTab === 'applications'">
         <h2>My Applications</h2>
         <div class="scrollable-table">
@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <!-- Interview Tab -->
+    <!-- Interview Info -->
     <div *ngIf="selectedTab === 'interview'">
         <h2>Interview Info</h2>
         <div class="scrollable-table">
@@ -142,9 +142,39 @@
         </div>
     </div>
 
-    <!-- Feedback Tab -->
+    <!-- Feedback -->
     <div *ngIf="selectedTab === 'feedback'">
-        <h2>Feedback</h2>
+        <h2>Submit Interview Feedback</h2>
+
+        <form (ngSubmit)="submitFeedback()" *ngIf="interviewDetails">
+            <p><strong>Company:</strong> {{ interviewDetails.companyName }}</p>
+            <p><strong>Role:</strong> {{ interviewDetails.jobRole }}</p>
+            <p><strong>Interview Date:</strong> {{ interviewDetails.interviewDate | date }}</p>
+
+            <label>Difficulty Rating (1–10):
+                <input type="number" [(ngModel)]="feedback.difficultyRating" name="difficultyRating" min="1" max="10"
+                    required />
+            </label><br />
+
+            <label>Interview Rounds:
+                <input type="text" [(ngModel)]="feedback.interviewRounds" name="interviewRounds" required />
+            </label><br />
+
+            <label>Questions Asked:
+                <textarea [(ngModel)]="feedback.questionsAsked" name="questionsAsked" required></textarea>
+            </label><br />
+
+            <label>Experience:
+                <textarea [(ngModel)]="feedback.experience" name="experience" required></textarea>
+            </label><br />
+
+            <label>Tips:
+                <textarea [(ngModel)]="feedback.tips" name="tips" required></textarea>
+            </label><br />
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+        <p *ngIf="!interviewDetails" style="color: gray;">No eligible interview found for feedback.</p>
     </div>
 
 </div>

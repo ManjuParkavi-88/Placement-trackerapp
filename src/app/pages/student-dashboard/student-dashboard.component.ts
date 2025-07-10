@@ -6,11 +6,12 @@ import { JobService } from '../../services/job.service';
 import { ApplicationsService } from '../../services/application.service';
 import { Job } from '../../models/job.model';
 import { Application } from '../../models/application.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-student-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './student-dashboard.component.html',
   styleUrls: ['./student-dashboard.component.css']
 })
@@ -20,7 +21,22 @@ export class StudentDashboardComponent implements OnInit {
   jobs: Job[] = [];
   applications: Application[] = [];
   appliedJobs: Set<number> = new Set();
-  interviewSchedules: any[] = []; // ✅ FIXED: Correctly placed outside any method
+  interviewSchedules: any[] = [];
+  interviewDetails: any = null;
+
+  eligibleFeedbackQueue: any[] = []; // NEW: Queue for feedback
+  feedback: any = {
+    applicationId: 0,
+    studentId: 0,
+    companyName: '',
+    jobRole: '',
+    interviewDate: '',
+    difficultyRating: 1,
+    interviewRounds: '',
+    questionsAsked: '',
+    experience: '',
+    tips: ''
+  };
 
   constructor(
     private router: Router,
@@ -37,18 +53,13 @@ export class StudentDashboardComponent implements OnInit {
     this.fetchMyApplications();
   }
 
-  // ✅ Fetch all jobs
   fetchJobs(): void {
     this.jobService.getAllJobs().subscribe({
       next: (data) => (this.jobs = data),
-      error: (err) => {
-        console.error('Failed to fetch jobs:', err);
-        this.toastr.error('Could not load job listings.');
-      }
+      error: () => this.toastr.error('Could not load job listings.')
     });
   }
 
-  // ✅ Apply for a job
   apply(jobId: number): void {
     const application = {
       jobId: jobId,
@@ -61,24 +72,20 @@ export class StudentDashboardComponent implements OnInit {
         this.appliedJobs.add(jobId);
         this.fetchMyApplications();
       },
-      error: () => {
-        this.toastr.error('Failed to apply for job');
-      }
+      error: () => this.toastr.error('Failed to apply for job')
     });
   }
 
-  // ✅ Fetch student’s applications
   fetchMyApplications(): void {
     this.applicationService.getApplicationsByStudentId(this.student.id).subscribe({
       next: (data) => {
         this.applications = data;
-        this.appliedJobs = new Set(data.map((app) => app.jobId));
+        this.appliedJobs = new Set(data.map(app => app.jobId));
       },
       error: () => this.toastr.error('Failed to fetch applications')
     });
   }
 
-  // ✅ Confirm interview response (Accept/Decline)
   confirmInterview(applicationId: number): void {
     const confirmed = confirm('Do you want to schedule the interview?');
     const response = confirmed ? 'Accepted' : 'Declined';
@@ -92,23 +99,21 @@ export class StudentDashboardComponent implements OnInit {
         );
         this.fetchMyApplications();
       },
-      error: () => {
-        this.toastr.error('Failed to update interview response');
-      }
+      error: () => this.toastr.error('Failed to update interview response')
     });
   }
 
-  // ✅ Switch tabs + load interview info on click
   selectTab(tab: string): void {
     this.selectedTab = tab;
     if (tab === 'applications') {
       this.fetchMyApplications();
     } else if (tab === 'interview') {
-      this.fetchInterviewInfo(); // ✅ Load interviews if "Interview Info" selected
+      this.fetchInterviewInfo();
+    } else if (tab === 'feedback') {
+      this.populateFeedbackFromInterviews();
     }
   }
 
-  // ✅ Load interview schedules for the logged-in student
   fetchInterviewInfo(): void {
     this.applicationService.getInterviewSchedulesByStudentId(this.student.id).subscribe({
       next: (data) => this.interviewSchedules = data,
@@ -116,7 +121,95 @@ export class StudentDashboardComponent implements OnInit {
     });
   }
 
-  // ✅ Logout functionality
+  populateFeedbackFromInterviews(): void {
+    this.applicationService.getApplicationsByStudentId(this.student.id).subscribe({
+      next: (apps) => {
+        this.applications = apps;
+
+        this.applicationService.getInterviewSchedulesByStudentId(this.student.id).subscribe({
+          next: (interviews) => {
+            const eligible = apps.filter(
+              app =>
+                app.response === 'Accepted' &&
+                app.status === 'Shortlisted' &&
+                interviews.some(interview => interview.jobId === app.jobId)
+            ).map(app => {
+              const interview = interviews.find(i => i.jobId === app.jobId && i.studentId === app.studentId);
+              return {
+                applicationId: app.applicationId,
+                studentId: this.student.id,
+                companyName: app.companyName,
+                jobRole: app.jobRole,
+                interviewDate: interview?.date || ''
+              };
+            });
+
+            this.eligibleFeedbackQueue = eligible;
+
+            if (eligible.length > 0) {
+              this.setFeedbackForm(eligible[0]);
+            } else {
+              this.interviewDetails = null;
+            }
+          },
+          error: () => this.toastr.error('Failed to load interview info')
+        });
+      },
+      error: () => this.toastr.error('Failed to fetch applications')
+    });
+  }
+
+  setFeedbackForm(data: any): void {
+    this.feedback = {
+      applicationId: data.applicationId,
+      studentId: data.studentId,
+      companyName: data.companyName,
+      jobRole: data.jobRole,
+      interviewDate: data.interviewDate,
+      difficultyRating: 1,
+      interviewRounds: '',
+      questionsAsked: '',
+      experience: '',
+      tips: ''
+    };
+
+    this.interviewDetails = {
+      companyName: data.companyName,
+      jobRole: data.jobRole,
+      interviewDate: data.interviewDate
+    };
+  }
+
+  submitFeedback(): void {
+    this.applicationService.postStudentFeedback(this.feedback).subscribe({
+      next: () => {
+        this.toastr.success('Feedback submitted successfully!');
+
+        // Remove the one just submitted
+        this.eligibleFeedbackQueue.shift();
+
+        if (this.eligibleFeedbackQueue.length > 0) {
+          this.setFeedbackForm(this.eligibleFeedbackQueue[0]);
+        } else {
+          this.feedback = {
+            applicationId: 0,
+            studentId: 0,
+            companyName: '',
+            jobRole: '',
+            interviewDate: '',
+            difficultyRating: 1,
+            interviewRounds: '',
+            questionsAsked: '',
+            experience: '',
+            tips: ''
+          };
+          this.interviewDetails = null;
+        }
+      },
+      error: () => this.toastr.error('Failed to submit feedback')
+    });
+  }
+
   logout(): void {
     if (confirm('Are you sure you want to logout?')) {
       localStorage.removeItem('student');
@@ -125,7 +218,6 @@ export class StudentDashboardComponent implements OnInit {
     }
   }
 
-  // ✅ File upload for profile picture
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
