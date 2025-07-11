@@ -18,7 +18,7 @@ export class JobService {
     return this.http.get<any[]>(`${this.studentBaseUrl}/listings`).pipe(
       map(rawJobs => rawJobs.map(job => ({
         jobId: job.jobId,
-        companyName: job.companyName, // adjust key if needed
+        companyName: job.company, // adjust key if needed
         jobRole: job.jobRole,
         jobDescription: job.jobDescription,
         applicationDeadline: job.applicationDeadline

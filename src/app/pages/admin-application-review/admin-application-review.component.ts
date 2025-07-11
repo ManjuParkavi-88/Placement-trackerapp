@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { ApplicationsService } from '../../services/application.service';
 import { ApplicationDTO } from '../../models/application.model';
@@ -24,40 +24,45 @@ export class AdminApplicationReviewComponent implements OnInit {
   }
 
   loadApplications(): void {
-  this.applicationsService.getAdminApplications().subscribe({
-    next: (data) => {
-      // Cleanly cast to boolean if needed
-      this.applications = data.map(app => ({
-        ...app,
-        interviewNotification: !!app.interviewNotification
-      }));
-    },
-    error: () => this.toastr.error("Failed to load applications")
-  });
-}
+    this.applicationsService.getAdminApplications().subscribe(
+      data => {
+        this.applications = data.map(app => ({
+          ...app,
+          interviewNotification: !!app.interviewNotification
+        }));
+      },
+      () => this.toastr.error('Failed to load applications')
+    );
+  }
 
-  shortlist(id: number): void {
-    this.applicationsService.shortlistApplication(id).subscribe({
-      next: () => {
-        this.toastr.success("Shortlisted successfully");
+ shortlist(id: number): void {
+  this.applicationsService.shortlistApplication(id).subscribe(
+    (response) => {
+      if (response.status === 200) {
+        this.toastr.success(`Application ${id} shortlisted`);
         this.loadApplications();
-      },
-      error: () => this.toastr.error("Failed to update status")
-    });
-  }
-
-  notify(studentId: number): void {
-    this.applicationsService.sendInterviewNotification(studentId).subscribe({
-      next: () => {
-        this.toastr.success("Notification sent");
-
-        // ✅ Directly update the UI without reload
-        const app = this.applications.find(a => a.studentId === studentId);
-        if (app) {
-          app.interviewNotification = true;
-        }
-      },
-      error: () => this.toastr.error("Failed to send notification")
-    });
-  }
+      } else {
+        this.toastr.error('Shortlist failed: Unexpected response');
+      }
+    },
+    () => this.toastr.error('Shortlist failed: Server error')
+  );
 }
+
+notify(studentId: number): void {
+  this.applicationsService.sendInterviewNotification(studentId).subscribe(
+    (response) => {
+      if (response.status === 200) {
+        this.toastr.success('Notification sent');
+        this.applications.forEach(app => {
+          if (app.studentId === studentId) {
+            app.interviewNotification = true;
+          }
+        });
+      } else {
+        this.toastr.error('Notification failed: Unexpected response');
+      }
+    },
+    () => this.toastr.error('Notification failed: Server error')
+  );
+}}

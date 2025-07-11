@@ -47,12 +47,12 @@ getAdminApplications(): Observable<ApplicationDTO[]> {
 
 // ✅ Update status (e.g. to Shortlisted)
 shortlistApplication(applicationId: number): Observable<any> {
-  return this.http.put(`${this.apiUrl}/${applicationId}/status?status=Shortlisted`, {});
+  return this.http.put(`${this.apiUrl}/${applicationId}/status?status=Shortlisted`, {}, { observe: 'response' });
 }
 
 // ✅ Send interview notification for a student
 sendInterviewNotification(studentId: number): Observable<any> {
-  return this.http.put(`${this.apiUrl}/interview-notification/${studentId}`, {});
+  return this.http.put(`${this.apiUrl}/interview-notification/${studentId}`, {}, { observe: 'response' });
 }
 getInterviewSchedulesByStudentId(studentId: number): Observable<any[]> {
   return this.http.get<any[]>(`http://localhost:8080/api/admin/interview-schedules/student/${studentId}`);

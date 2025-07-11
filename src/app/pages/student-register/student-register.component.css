@@ -1,18 +1,22 @@
 .container {
-    max-width: 900px;
-    margin: auto;
-    padding: 40px;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #a0e7e5, #b4f8c8, #caf0f8);
-    border-radius: 10px;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #2f4f4f;
-    margin-bottom: 30px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #a0e7e5, #b4f8c8, #caf0f8);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+h2 {
+  font-size: 2.5rem;
+  color: #2f4f4f;
+  margin-bottom: 20px;
+}
+
   .form-grid {
     display: flex;
     flex-wrap: wrap;

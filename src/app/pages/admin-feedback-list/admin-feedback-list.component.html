@@ -1,100 +1,110 @@
-<div class="tabs">
-    <button (click)="selectedTab = 'interview'">Interview & Shortlisted Details</button>
-    <button (click)="selectedTab = 'feedbacks'">Student Feedbacks</button>
+<div class="tabs-row">
+    <button class="tab-btn" [class.active]="selectedTab === 'interview'" (click)="selectedTab = 'interview'">
+        Interview & Shortlisted Details
+    </button>
+    <button class="tab-btn" [class.active]="selectedTab === 'feedbacks'" (click)="selectedTab = 'feedbacks'">
+        Student Feedbacks
+    </button>
 </div>
 
 <!-- TAB 1: Interview & Shortlisted Info -->
 <div *ngIf="selectedTab === 'interview'">
-    <h2>Interview & Shortlisted Students</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Job ID</th>
-                <th>Company</th>
-                <th>Job Role</th>
-                <th>Interview Date</th>
-                <th>Mode</th>
-                <th>Venue/Link</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of interviewShortlists">
-                <td>{{ item.studentId }}</td>
-                <td>{{ item.jobId }}</td>
-                <td>{{ item.companyName }}</td>
-                <td>{{ item.jobRole }}</td>
-                <td>{{ item.date }}</td>
-                <td>{{ item.mode }}</td>
-                <td>{{ item.venue || item.link || '—' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="tab-content">
+        <h2>Interview & Shortlisted Students</h2>
+        <div class="scrollable-table">
+            <table class="job-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Job ID</th>
+                        <th>Company</th>
+                        <th>Job Role</th>
+                        <th>Interview Date</th>
+                        <th>Mode</th>
+                        <th>Venue/Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of interviewShortlists">
+                        <td>{{ item.studentId }}</td>
+                        <td>{{ item.jobId }}</td>
+                        <td>{{ item.companyName }}</td>
+                        <td>{{ item.jobRole }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.mode }}</td>
+                        <td>{{ item.venue || item.link || '—' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- TAB 2: Student Feedbacks -->
 <div *ngIf="selectedTab === 'feedbacks'">
-    <h2>Feedbacks Submitted by Students</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Application ID</th>
-                <th>Company</th>
-                <th>Job Role</th>
-                <th>Interview Date</th>
-                <th>Difficulty</th>
-                <th>Rounds</th>
-                <th>Questions</th>
-                <th>Experience</th>
-                <th>Tips</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let fb of feedbackList">
-                <td>{{ fb.studentId }}</td>
-                <td>{{ fb.applicationId }}</td>
-                <td>{{ fb.companyName }}</td>
-                <td>{{ fb.jobRole }}</td>
-                <td>{{ fb.interviewDate }}</td>
-                <td>{{ fb.difficultyRating }}</td>
-                <td>{{ fb.interviewRounds }}</td>
-                <td>{{ fb.questionsAsked }}</td>
-                <td>{{ fb.experience }}</td>
-                <td>{{ fb.tips }}</td>
-                <td>
-                    <button (click)="editFeedback(fb)">Edit</button>
-                    <button (click)="deleteFeedback(fb.feedbackId)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="tab-content">
+        <h2>Feedbacks Submitted by Students</h2>
+        <div class="scrollable-table">
+            <table class="job-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Application ID</th>
+                        <th>Company</th>
+                        <th>Job Role</th>
+                        <th>Interview Date</th>
+                        <th>Difficulty</th>
+                        <th>Rounds</th>
+                        <th>Questions</th>
+                        <th>Experience</th>
+                        <th>Tips</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let fb of feedbackList">
+                        <td>{{ fb.studentId }}</td>
+                        <td>{{ fb.applicationId }}</td>
+                        <td>{{ fb.companyName }}</td>
+                        <td>{{ fb.jobRole }}</td>
+                        <td>{{ fb.interviewDate }}</td>
+                        <td>{{ fb.difficultyRating }}</td>
+                        <td>{{ fb.interviewRounds }}</td>
+                        <td>{{ fb.questionsAsked }}</td>
+                        <td>{{ fb.experience }}</td>
+                        <td>{{ fb.tips }}</td>
+                        <td>
+                            <button (click)="editFeedback(fb)">Edit</button>
+                            <button (click)="deleteFeedback(fb.feedbackId)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Editable Feedback Form -->
+        <div *ngIf="selectedFeedback" class="edit-box">
+            <h3>Edit Feedback</h3>
+            <label>Difficulty Rating:
+                <input type="number" [(ngModel)]="selectedFeedback.difficultyRating" min="1" max="10" />
+            </label><br />
 
-    <!-- Editable Feedback Form -->
-    <div *ngIf="selectedFeedback" class="edit-box">
-        <h3>Edit Feedback</h3>
-        <label>Difficulty Rating:
-            <input type="number" [(ngModel)]="selectedFeedback.difficultyRating" min="1" max="10" />
-        </label><br />
+            <label>Interview Rounds:
+                <input type="text" [(ngModel)]="selectedFeedback.interviewRounds" />
+            </label><br />
 
-        <label>Interview Rounds:
-            <input type="text" [(ngModel)]="selectedFeedback.interviewRounds" />
-        </label><br />
+            <label>Questions Asked:
+                <textarea [(ngModel)]="selectedFeedback.questionsAsked"></textarea>
+            </label><br />
 
-        <label>Questions Asked:
-            <textarea [(ngModel)]="selectedFeedback.questionsAsked"></textarea>
-        </label><br />
+            <label>Experience:
+                <textarea [(ngModel)]="selectedFeedback.experience"></textarea>
+            </label><br />
 
-        <label>Experience:
-            <textarea [(ngModel)]="selectedFeedback.experience"></textarea>
-        </label><br />
+            <label>Tips:
+                <textarea [(ngModel)]="selectedFeedback.tips"></textarea>
+            </label><br />
 
-        <label>Tips:
-            <textarea [(ngModel)]="selectedFeedback.tips"></textarea>
-        </label><br />
-
-        <button (click)="saveFeedback()">Save</button>
-        <button (click)="selectedFeedback = null">Cancel</button>
+            <button (click)="saveFeedback()">Save</button>
+            <button (click)="selectedFeedback = null">Cancel</button>
+        </div>
     </div>
-</div>

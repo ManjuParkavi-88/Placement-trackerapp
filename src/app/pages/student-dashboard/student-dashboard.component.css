@@ -167,3 +167,123 @@ body, .tab-content {
     color: white;
     z-index: 1;
   }
+  .container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #a0e7e5, #b4f8c8, #caf0f8);
+    border-radius: 10px;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #2f4f4f;
+    margin-bottom: 30px;
+  }
+  
+  .form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+  }
+  
+  .form-column {
+    flex: 1;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  input,
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .form-actions {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  button:hover {
+    background-color: #008c9e;
+  }
+  
+  .links {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .feedback-form {
+    background:transparent;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .info-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .feedback-form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .feedback-form input,
+  .feedback-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+  
+  .feedback-form textarea {
+    min-height: 80px;
+  }
+  
+  .feedback-form button {
+    background-color: #00bcd4;
+    padding: 12px 28px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .feedback-form button:hover {
+    background-color: #0097a7;
+  }
+  

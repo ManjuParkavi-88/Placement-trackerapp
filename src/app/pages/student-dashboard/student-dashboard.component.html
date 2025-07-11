@@ -146,35 +146,40 @@
     <div *ngIf="selectedTab === 'feedback'">
         <h2>Submit Interview Feedback</h2>
 
-        <form (ngSubmit)="submitFeedback()" *ngIf="interviewDetails">
-            <p><strong>Company:</strong> {{ interviewDetails.companyName }}</p>
-            <p><strong>Role:</strong> {{ interviewDetails.jobRole }}</p>
-            <p><strong>Interview Date:</strong> {{ interviewDetails.interviewDate | date }}</p>
+        <form (ngSubmit)="submitFeedback()" *ngIf="interviewDetails" class="feedback-form">
+            <div class="info-grid">
+                <p><strong>Company:</strong> {{ interviewDetails.companyName }}</p>
+                <p><strong>Role:</strong> {{ interviewDetails.jobRole }}</p>
+                <p><strong>Interview Date:</strong> {{ interviewDetails.interviewDate | date }}</p>
+            </div>
 
-            <label>Difficulty Rating (1–10):
-                <input type="number" [(ngModel)]="feedback.difficultyRating" name="difficultyRating" min="1" max="10"
-                    required />
-            </label><br />
+            <div class="form-grid">
+                <div class="form-column">
+                    <label>Difficulty Rating (1–10):</label>
+                    <input type="number" [(ngModel)]="feedback.difficultyRating" name="difficultyRating" min="1"
+                        max="10" required />
 
-            <label>Interview Rounds:
-                <input type="text" [(ngModel)]="feedback.interviewRounds" name="interviewRounds" required />
-            </label><br />
+                    <label>Interview Rounds:</label>
+                    <input type="text" [(ngModel)]="feedback.interviewRounds" name="interviewRounds" required />
 
-            <label>Questions Asked:
-                <textarea [(ngModel)]="feedback.questionsAsked" name="questionsAsked" required></textarea>
-            </label><br />
+                    <label>Questions Asked:</label>
+                    <textarea [(ngModel)]="feedback.questionsAsked" name="questionsAsked" required></textarea>
+                </div>
 
-            <label>Experience:
-                <textarea [(ngModel)]="feedback.experience" name="experience" required></textarea>
-            </label><br />
+                <div class="form-column">
+                    <label>Experience:</label>
+                    <textarea [(ngModel)]="feedback.experience" name="experience" required></textarea>
 
-            <label>Tips:
-                <textarea [(ngModel)]="feedback.tips" name="tips" required></textarea>
-            </label><br />
+                    <label>Tips:</label>
+                    <textarea [(ngModel)]="feedback.tips" name="tips" required></textarea>
+                </div>
+            </div>
 
-            <button type="submit">Submit Feedback</button>
+            <div class="form-actions">
+                <button type="submit">Submit Feedback</button>
+            </div>
         </form>
+
         <p *ngIf="!interviewDetails" style="color: gray;">No eligible interview found for feedback.</p>
     </div>
-
 </div>

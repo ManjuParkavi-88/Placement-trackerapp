@@ -23,8 +23,8 @@ export class StudentDashboardComponent implements OnInit {
   appliedJobs: Set<number> = new Set();
   interviewSchedules: any[] = [];
   interviewDetails: any = null;
+  eligibleFeedbackQueue: any[] = [];
 
-  eligibleFeedbackQueue: any[] = []; // NEW: Queue for feedback
   feedback: any = {
     applicationId: 0,
     studentId: 0,
@@ -54,53 +54,45 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   fetchJobs(): void {
-    this.jobService.getAllJobs().subscribe({
-      next: (data) => (this.jobs = data),
-      error: () => this.toastr.error('Could not load job listings.')
-    });
+    this.jobService.getAllJobs().subscribe(
+      data => this.jobs = data,
+      () => this.toastr.error('Could not load job listings.')
+    );
   }
 
   apply(jobId: number): void {
-    const application = {
-      jobId: jobId,
-      studentId: this.student.id
-    };
-
-    this.jobService.applyForJob(application).subscribe({
-      next: () => {
+    const application = { jobId, studentId: this.student.id };
+    this.jobService.applyForJob(application).subscribe(
+      () => {
         this.toastr.success('Applied successfully!');
         this.appliedJobs.add(jobId);
         this.fetchMyApplications();
       },
-      error: () => this.toastr.error('Failed to apply for job')
-    });
+      () => this.toastr.error('Failed to apply for job')
+    );
   }
 
   fetchMyApplications(): void {
-    this.applicationService.getApplicationsByStudentId(this.student.id).subscribe({
-      next: (data) => {
+    this.applicationService.getApplicationsByStudentId(this.student.id).subscribe(
+      data => {
         this.applications = data;
         this.appliedJobs = new Set(data.map(app => app.jobId));
       },
-      error: () => this.toastr.error('Failed to fetch applications')
-    });
+      () => this.toastr.error('Failed to fetch applications')
+    );
   }
 
   confirmInterview(applicationId: number): void {
     const confirmed = confirm('Do you want to schedule the interview?');
     const response = confirmed ? 'Accepted' : 'Declined';
 
-    this.applicationService.updateInterviewResponse(applicationId, response).subscribe({
-      next: () => {
-        this.toastr[response === 'Accepted' ? 'success' : 'info'](
-          response === 'Accepted'
-            ? 'Interview response sent to admin.'
-            : 'You declined the interview schedule.'
-        );
+    this.applicationService.updateInterviewResponse(applicationId, response).subscribe(
+      () => {
+        this.toastr.success(`Interview response: ${response}`);
         this.fetchMyApplications();
       },
-      error: () => this.toastr.error('Failed to update interview response')
-    });
+      () => this.toastr.error('Failed to update interview response')
+    );
   }
 
   selectTab(tab: string): void {
@@ -115,24 +107,23 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   fetchInterviewInfo(): void {
-    this.applicationService.getInterviewSchedulesByStudentId(this.student.id).subscribe({
-      next: (data) => this.interviewSchedules = data,
-      error: () => this.toastr.error('Failed to load interview info')
-    });
+    this.applicationService.getInterviewSchedulesByStudentId(this.student.id).subscribe(
+      data => this.interviewSchedules = data,
+      () => this.toastr.error('Failed to load interview info')
+    );
   }
 
   populateFeedbackFromInterviews(): void {
-    this.applicationService.getApplicationsByStudentId(this.student.id).subscribe({
-      next: (apps) => {
+    this.applicationService.getApplicationsByStudentId(this.student.id).subscribe(
+      apps => {
         this.applications = apps;
-
-        this.applicationService.getInterviewSchedulesByStudentId(this.student.id).subscribe({
-          next: (interviews) => {
+        this.applicationService.getInterviewSchedulesByStudentId(this.student.id).subscribe(
+          interviews => {
             const eligible = apps.filter(
               app =>
                 app.response === 'Accepted' &&
                 app.status === 'Shortlisted' &&
-                interviews.some(interview => interview.jobId === app.jobId)
+                interviews.some(i => i.jobId === app.jobId)
             ).map(app => {
               const interview = interviews.find(i => i.jobId === app.jobId && i.studentId === app.studentId);
               return {
@@ -152,11 +143,11 @@ export class StudentDashboardComponent implements OnInit {
               this.interviewDetails = null;
             }
           },
-          error: () => this.toastr.error('Failed to load interview info')
-        });
+          () => this.toastr.error('Failed to load interview info')
+        );
       },
-      error: () => this.toastr.error('Failed to fetch applications')
-    });
+      () => this.toastr.error('Failed to fetch applications')
+    );
   }
 
   setFeedbackForm(data: any): void {
@@ -181,13 +172,10 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   submitFeedback(): void {
-    this.applicationService.postStudentFeedback(this.feedback).subscribe({
-      next: () => {
+    this.applicationService.postStudentFeedback(this.feedback).subscribe(
+      () => {
         this.toastr.success('Feedback submitted successfully!');
-
-        // Remove the one just submitted
         this.eligibleFeedbackQueue.shift();
-
         if (this.eligibleFeedbackQueue.length > 0) {
           this.setFeedbackForm(this.eligibleFeedbackQueue[0]);
         } else {
@@ -206,8 +194,8 @@ export class StudentDashboardComponent implements OnInit {
           this.interviewDetails = null;
         }
       },
-      error: () => this.toastr.error('Failed to submit feedback')
-    });
+      () => this.toastr.error('Failed to submit feedback')
+    );
   }
 
   logout(): void {
