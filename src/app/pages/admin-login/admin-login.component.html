@@ -12,7 +12,7 @@
 
         <div class="links">
             <a routerLink="/admin-register">Register</a> |
-            <a routerLink="/forgot-password">Forgot Password?</a>
+            <a [routerLink]="['/forgot-password', 'admin']">Forgot Password?</a>
         </div>
         <div class="back-link">
             <a routerLink="/welcome">← Back to Welcome Page</a>

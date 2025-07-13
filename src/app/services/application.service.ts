@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Application } from '../models/application.model';
-import { ApplicationDTO } from '../models/application.model';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Application, ApplicationDTO } from '../models/application.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,12 +21,12 @@ export class ApplicationsService {
     return this.http.get<Application[]>(`${this.apiUrl}/student/${studentId}`);
   }
 
-  // ✅ Create new application
+  // ✅ Add new application
   addApplication(application: Application): Observable<Application> {
     return this.http.post<Application>(this.apiUrl, application);
   }
 
-  // ✅ Update application status
+  // ✅ Update application
   updateApplication(id: number, updated: Partial<Application>): Observable<Application> {
     return this.http.put<Application>(`${this.apiUrl}/${id}`, updated);
   }
@@ -37,27 +36,51 @@ export class ApplicationsService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  updateInterviewResponse(applicationId: number, response: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${applicationId}/response?response=${response}`, {});
+  // ✅ Student: Update interview response
+  updateInterviewResponse(applicationId: number, response: string): Observable<HttpResponse<any>> {
+    return this.http.put(
+      `${this.apiUrl}/${applicationId}/response?response=${response}`,
+      {},
+      { observe: 'response' } // ✅ This enables res.status access in component
+    );
   }
-// ✅ Get all applications for admin view
-getAdminApplications(): Observable<ApplicationDTO[]> {
-  return this.http.get<ApplicationDTO[]>(`${this.apiUrl}/admin/all`);
-}
 
-// ✅ Update status (e.g. to Shortlisted)
-shortlistApplication(applicationId: number): Observable<any> {
-  return this.http.put(`${this.apiUrl}/${applicationId}/status?status=Shortlisted`, {}, { observe: 'response' });
-}
+  // ✅ Admin: Get all applications with job info
+  getAdminApplications(): Observable<ApplicationDTO[]> {
+    return this.http.get<ApplicationDTO[]>(`${this.apiUrl}/admin/all`);
+  }
 
-// ✅ Send interview notification for a student
-sendInterviewNotification(studentId: number): Observable<any> {
-  return this.http.put(`${this.apiUrl}/interview-notification/${studentId}`, {}, { observe: 'response' });
-}
-getInterviewSchedulesByStudentId(studentId: number): Observable<any[]> {
-  return this.http.get<any[]>(`http://localhost:8080/api/admin/interview-schedules/student/${studentId}`);
-}
-postStudentFeedback(feedback: any): Observable<any> {
-  return this.http.post(`http://localhost:8080/api/student/feedbacks`, feedback);
-}
+  // ✅ Admin: Shortlist application
+  shortlistApplication(applicationId: number): Observable<HttpResponse<any>> {
+    return this.http.put(
+      `${this.apiUrl}/${applicationId}/status?status=Shortlisted`,
+      {},
+      { observe: 'response' }
+    );
+  }
+
+  // ✅ Admin: Send interview notification to student
+  sendInterviewNotification(studentId: number): Observable<HttpResponse<any>> {
+    return this.http.put(
+      `${this.apiUrl}/interview-notification/${studentId}`,
+      {},
+      { observe: 'response' }
+    );
+  }
+
+  // ✅ Student: Get interview schedules
+  getInterviewSchedulesByStudentId(studentId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `http://localhost:8080/api/admin/interview-schedules/student/${studentId}`
+    );
+  }
+
+  // ✅ Student: Post feedback
+  postStudentFeedback(feedback: any): Observable<HttpResponse<any>> {
+    return this.http.post(
+      `http://localhost:8080/api/student/feedbacks`,
+      feedback,
+      { observe: 'response' }
+    );
+  }
 }

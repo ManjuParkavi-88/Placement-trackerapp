@@ -31,5 +31,10 @@ export class AdminService {
     return this.http.delete<void>(`${this.apiUrl}/feedbacks/${id}`);
   }
 
+  updateStudentStatus(id: number, status: string): Observable<any> {
+  const url = `http://localhost:8080/api/student/students/${id}/status?status=${status}`;
+  console.log('Sending PUT to:', url); // ✅ correct path
+  return this.http.put(url, {});
+}
   
 }

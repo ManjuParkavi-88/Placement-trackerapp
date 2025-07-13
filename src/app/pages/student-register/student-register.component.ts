@@ -61,6 +61,7 @@ export class StudentRegisterComponent {
       .subscribe({
         next: (res) => {
           this.toastr.success('Registration successful!');
+          this.router.navigate(['/student-login']); 
         },
         error: (err) => {
           this.toastr.error('Registration failed!');

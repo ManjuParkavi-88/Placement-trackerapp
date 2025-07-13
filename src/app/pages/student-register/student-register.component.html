@@ -4,27 +4,29 @@
 
         <div class="form-column">
             <label for="firstName">First Name:</label>
-            <input id="firstName" name="firstName" type="text" [(ngModel)]="firstName" required />
+            <input id="firstName" name="firstName" type="text" [(ngModel)]="firstName" required pattern="^[A-Za-z ]+$"
+                title="Only letters and spaces allowed" />
 
+            <!-- Last Name -->
             <label for="lastName">Last Name:</label>
-            <input id="lastName" name="lastName" type="text" [(ngModel)]="lastName" required />
+            <input id="lastName" name="lastName" type="text" [(ngModel)]="lastName" required pattern="^[A-Za-z ]+$"
+                title="Only letters and spaces allowed" />
 
             <label for="email">Email:</label>
             <input id="email" name="email" type="email" [(ngModel)]="email" required />
 
             <label for="phone">Phone Number:</label>
-            <input id="phone" name="phone" type="text" [(ngModel)]="phoneNo" required />
+            <input id="phone" name="phone" type="text" [(ngModel)]="phoneNo" required pattern="^[0-9]{10}$"
+                title="Must be a 10-digit number" maxlength="10" />
 
             <label for="dob">Date of Birth:</label>
             <input id="dob" name="dob" type="date" [(ngModel)]="dob" [attr.max]="maxDob" required />
 
             <label for="college">College Name:</label>
             <input id="college" name="college" type="text" [(ngModel)]="collegeName" required />
-
         </div>
 
         <div class="form-column">
-
             <label for="city">City:</label>
             <input id="city" name="city" type="text" [(ngModel)]="city" required />
 
@@ -40,9 +42,13 @@
             <label for="rollNo">Roll Number:</label>
             <input id="rollNo" name="rollNo" type="text" [(ngModel)]="rollNo" required />
 
+            <!-- Password -->
             <label for="password">Password:</label>
-            <input id="password" name="password" type="password" [(ngModel)]="password" required />
+            <input id="password" name="password" type="password" [(ngModel)]="password" required minlength="6"
+                pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
+                title="Must contain uppercase, number, special character and be at least 6 characters long" />
 
+            <!-- Confirm Password -->
             <label for="confirmPassword">Confirm Password:</label>
             <input id="confirmPassword" name="confirmPassword" type="password" [(ngModel)]="confirmPassword" required />
         </div>

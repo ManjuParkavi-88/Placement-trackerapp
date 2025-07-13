@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminAuthService {
-  private baseUrl = 'http://localhost:8080/api/admins'; // adjust if needed
+  private baseUrl = 'http://localhost:8080/api/admin';
 
   constructor(private http: HttpClient) {}
 
@@ -16,5 +16,12 @@ export class AdminAuthService {
 
   loginAdmin(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/login`, credentials);
+  }
+
+  resetPassword(email: string, newPassword: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/reset-password`, {
+      email,
+      newPassword
+    });
   }
 }

@@ -6,6 +6,7 @@ import { StudentRegisterComponent } from './pages/student-register/student-regis
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { StudentDashboardComponent } from './pages/student-dashboard/student-dashboard.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -16,7 +17,7 @@ export const routes: Routes = [
   { path: 'student-register', component: StudentRegisterComponent },
   { path: 'admin-dashboard', component: AdminDashboardComponent },
   { path: 'student-dashboard', component: StudentDashboardComponent },
-
+ { path: 'forgot-password/:role', component: ForgotPasswordComponent },
   // ✅ Add this route for Interview Scheduling tab
   {
     path: 'admin/interview-scheduler',

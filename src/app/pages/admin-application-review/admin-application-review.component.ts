@@ -1,21 +1,27 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ApplicationsService } from '../../services/application.service';
 import { ApplicationDTO } from '../../models/application.model';
-import { ToastrService } from 'ngx-toastr';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
-  standalone: true,
   selector: 'app-admin-application-review',
+  standalone: true,
   templateUrl: './admin-application-review.component.html',
   styleUrls: ['./admin-application-review.component.css'],
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ToastrModule
+    ]
 })
 export class AdminApplicationReviewComponent implements OnInit {
   applications: ApplicationDTO[] = [];
 
   constructor(
-    private applicationsService: ApplicationsService,
+    private applicationsService: ApplicationsService, // ✅ Injected here
     private toastr: ToastrService
   ) {}
 
@@ -24,45 +30,44 @@ export class AdminApplicationReviewComponent implements OnInit {
   }
 
   loadApplications(): void {
-    this.applicationsService.getAdminApplications().subscribe(
-      data => {
-        this.applications = data.map(app => ({
-          ...app,
-          interviewNotification: !!app.interviewNotification
-        }));
+    this.applicationsService.getAdminApplications().subscribe({
+      next: (data) => {
+        this.applications = data;
       },
-      () => this.toastr.error('Failed to load applications')
-    );
+      error: () => {
+        this.toastr.error('Failed to load applications');
+      }
+    });
   }
 
- shortlist(id: number): void {
-  this.applicationsService.shortlistApplication(id).subscribe(
-    (response) => {
-      if (response.status === 200) {
-        this.toastr.success(`Application ${id} shortlisted`);
-        this.loadApplications();
-      } else {
-        this.toastr.error('Shortlist failed: Unexpected response');
+  shortlist(id: number): void {
+    this.applicationsService.shortlistApplication(id).subscribe({
+      next: (res: HttpResponse<any>) => {
+        if (res.status === 200) {
+          this.toastr.success(`Application ${id} shortlisted`);
+          this.loadApplications();
+        } else {
+          this.toastr.error('Shortlisting failed');
+        }
+      },
+      error: () => {
+        this.toastr.error('Failed to update status');
       }
-    },
-    () => this.toastr.error('Shortlist failed: Server error')
-  );
-}
+    });
+  }
 
-notify(studentId: number): void {
-  this.applicationsService.sendInterviewNotification(studentId).subscribe(
-    (response) => {
-      if (response.status === 200) {
-        this.toastr.success('Notification sent');
-        this.applications.forEach(app => {
-          if (app.studentId === studentId) {
-            app.interviewNotification = true;
-          }
-        });
-      } else {
-        this.toastr.error('Notification failed: Unexpected response');
+  notify(studentId: number): void {
+    this.applicationsService.sendInterviewNotification(studentId).subscribe({
+      next: (res: HttpResponse<any>) => {
+        if (res.status === 200) {
+          this.toastr.success('Notification sent');
+        } else {
+          this.toastr.error('Notification failed');
+        }
+      },
+      error: () => {
+        this.toastr.error('Error sending notification');
       }
-    },
-    () => this.toastr.error('Notification failed: Server error')
-  );
-}}
+    });
+  }
+}

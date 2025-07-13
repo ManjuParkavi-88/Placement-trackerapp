@@ -25,7 +25,11 @@
                 <td>{{ student.batch }}</td>
                 <td>{{ student.city }}</td>
                 <td>{{ student.phoneNo }}</td> <!-- ✅ fix this: avoid dot inside property -->
-                <td>{{ student.status }}</td>
+                <td>
+                    <select [(ngModel)]="student.status" (change)="updateStatus(student)">
+                        <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                    </select>
+                </td>
             </tr>
         </tbody>
     </table>
